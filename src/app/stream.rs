@@ -1,6 +1,14 @@
-use actix_web::{get, web::Bytes, Error, HttpResponse};
+use actix_web::{
+    get,
+    web::{Bytes, ServiceConfig},
+    Error, HttpResponse,
+};
 use futures::future::ok;
 use futures::stream::once;
+
+pub fn config(cfg: &mut ServiceConfig) {
+    cfg.service(stream);
+}
 
 #[get("/stream")]
 pub async fn stream() -> HttpResponse {
