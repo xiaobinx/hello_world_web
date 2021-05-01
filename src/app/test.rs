@@ -1,8 +1,21 @@
-use actix_web::{get, post, web::ServiceConfig, Either, Error, HttpResponse, Responder, Result};
+use actix_web::{
+    get, post,
+    web::{Json, ServiceConfig},
+    Either, Error, HttpResponse, Responder, Result,
+};
+use rand::Rng;
 use std::thread;
 
 pub fn config(cfg: &mut ServiceConfig) {
-    cfg.service(either).service(echo).service(thread_name);
+    cfg.service(either)
+        .service(echo)
+        .service(token_key_gen)
+        .service(thread_name);
+}
+
+#[get("/token_key_gen")]
+async fn token_key_gen() -> impl Responder {
+    Json(rand::thread_rng().gen::<[u8; 32]>())
 }
 
 #[get("/ThreadName")]

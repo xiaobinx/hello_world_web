@@ -3,15 +3,18 @@ use actix_web::{get, web, Result};
 mod err;
 mod extractors;
 mod json;
+mod jwttest;
 pub mod middleware;
 mod session;
 pub mod state;
 mod stream;
 mod test;
-mod tool;
+mod tokentest;
+pub mod tool;
 mod urldispatch;
 
 pub fn config(cfg: &mut web::ServiceConfig) {
+    tokentest::config(cfg);
     extractors::config(cfg);
     state::config(cfg);
     urldispatch::config(cfg);
