@@ -1,14 +1,4 @@
-use std::sync::Arc;
-
-use actix_web::{error, Error, HttpRequest};
-use hmac::{Hmac, NewMac};
-use jwt::{SignWithKey, VerifyWithKey};
-use sha2::Sha256;
-
-use super::TokenInfo;
-
 pub type ArcTokenTool = Arc<TokenTool>;
-
 pub struct TokenTool {
     hmac: Hmac<Sha256>,
 }

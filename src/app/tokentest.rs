@@ -4,7 +4,7 @@ use actix_web::{
     HttpRequest, HttpResponse, Result,
 };
 
-use crate::tool::{token::ArcTokenTool, TokenInfo};
+use crate::tool::token::{ArcTokenTool, TokenInfo};
 
 pub fn config(cfg: &mut ServiceConfig) {
     cfg.service(
