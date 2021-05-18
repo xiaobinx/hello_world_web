@@ -10,6 +10,8 @@ use futures::{
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
+use crate::tool::app_state::AppState;
+
 pub struct SayHi;
 
 impl<S, B> Transform<S> for SayHi
@@ -57,7 +59,7 @@ where
         //     }
         //     println!("{:?}", data.labels);
         // }
-        let data: &Data<crate::app::state::AppState> = req.app_data().unwrap();
+        let data: &Data<AppState> = req.app_data().unwrap();
         let data = data.clone();
         let method = req.method().to_string();
         let path = req.path().to_string();

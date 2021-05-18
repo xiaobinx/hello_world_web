@@ -3,14 +3,10 @@ use actix_web::{get, web, Result};
 mod err;
 mod extractors;
 mod json;
-mod jwttest;
-pub mod middleware;
-mod session;
 pub mod state;
 mod stream;
 mod test;
 mod tokentest;
-pub mod tool;
 mod urldispatch;
 
 pub fn config(cfg: &mut web::ServiceConfig) {
@@ -21,7 +17,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     err::config(cfg);
     json::config(cfg);
     test::config(cfg);
-    session::config(cfg);
     stream::config(cfg);
 
     cfg.service(index);
