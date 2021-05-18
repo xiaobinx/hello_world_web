@@ -25,6 +25,7 @@ impl TokenTool {
             }
         }
     }
+
     pub fn verify_from_str(&self, token: &str) -> Result<TokenInfo, Error> {
         let t: TokenInfo = token
             .verify_with_key(&self.hmac)
