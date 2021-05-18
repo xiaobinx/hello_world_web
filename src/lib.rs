@@ -14,8 +14,8 @@ pub mod tool;
 
 pub async fn start() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
-    let app_state = web::Data::new(AppState::new("My Web"));
-    let token_tool = TokenTool::new_arc(b"d566cb10-aa55-11eb-bcbc-0242ac130002");
+    let app_state = Data::new(AppState::new("My Web"));
+    let token_tool = Data::new(TokenTool::new(b"d566cb10-aa55-11eb-bcbc-0242ac130002"));
     HttpServer::new(move || {
         App::new()
             // .wrap(app::middleware::sayhi::SayHi)
@@ -28,7 +28,7 @@ pub async fn start() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(Compress::default())
             .app_data(app_state.clone())
-            .app_data(Data::new(token_tool.clone()))
+            .app_data(token_tool.clone())
             .configure(app::config)
             .service(Files::new("/", "./static").show_files_listing())
             .default_service(

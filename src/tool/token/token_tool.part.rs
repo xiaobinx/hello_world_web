@@ -1,17 +1,11 @@
-pub type ArcTokenTool = Arc<TokenTool>;
 pub struct TokenTool {
     hmac: Hmac<Sha256>,
 }
 
 impl TokenTool {
-    // pub fn new(key: &[u8]) -> TokenTool {
-    //     let hmac: Hmac<Sha256> = Hmac::new_varkey(key).unwrap();
-    //     TokenTool { hmac }
-    // }
-
-    pub fn new_arc(key: &[u8]) -> ArcTokenTool {
+    pub fn new(key: &[u8]) -> TokenTool {
         let hmac: Hmac<Sha256> = Hmac::new_varkey(key).unwrap();
-        Arc::new(TokenTool { hmac })
+        TokenTool { hmac }
     }
 
     pub fn sign(&self, t: &TokenInfo) -> Result<String, Error> {
@@ -20,6 +14,7 @@ impl TokenTool {
             .map_err(|e| error::ErrorInternalServerError(e))?;
         Ok(token)
     }
+
     pub fn verify_from_req(&self, req: &HttpRequest) -> Result<TokenInfo, Error> {
         let auth = req.headers().get("Authorization");
         match auth {

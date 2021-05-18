@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use actix_web::{error, Error, HttpRequest};
 use hmac::{Hmac, NewMac};
 use jwt::{SignWithKey, VerifyWithKey};
