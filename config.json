@@ -1,0 +1,6 @@
+{
+  "port": 8080,
+  "key": "d566cb10-aa55-11eb-bcbc-0242ac130002",
+  "static_dir": "./static",
+  "log_level": "debug"
+}
