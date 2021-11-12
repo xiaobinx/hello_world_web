@@ -1,5 +1,11 @@
 use actix_files::NamedFile;
-use actix_web::{get, web, Result};
+use actix_web::{
+    get,
+    web::{self, Data},
+    Result,
+};
+
+use crate::tool::configure::Config;
 mod err;
 mod extractors;
 mod json;
@@ -23,6 +29,9 @@ pub fn config(cfg: &mut web::ServiceConfig) {
 }
 
 #[get("/")]
-async fn index() -> Result<NamedFile> {
-    Ok(NamedFile::open("./static/index.html")?)
+pub async fn index(config: Data<Config>) -> Result<NamedFile> {
+    Ok(NamedFile::open(format!(
+        "{}/index.html",
+        config.static_dir()
+    ))?)
 }

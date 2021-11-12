@@ -1,21 +1,27 @@
+use actix_web::{error, Error, HttpRequest};
+use hmac::{Hmac, NewMac};
+use jwt::{SignWithKey, VerifyWithKey};
+use serde::{de::DeserializeOwned, Serialize};
+use sha2::Sha256;
+
 pub struct TokenTool {
     hmac: Hmac<Sha256>,
 }
 
 impl TokenTool {
     pub fn new(key: &[u8]) -> TokenTool {
-        let hmac: Hmac<Sha256> = Hmac::new_varkey(key).unwrap();
+        let hmac: Hmac<Sha256> = Hmac::new_from_slice(key).unwrap();
         TokenTool { hmac }
     }
 
-    pub fn sign(&self, t: &TokenInfo) -> Result<String, Error> {
+    pub fn sign<T: Serialize>(&self, t: &T) -> Result<String, Error> {
         let token = t
             .sign_with_key(&self.hmac)
             .map_err(|e| error::ErrorInternalServerError(e))?;
         Ok(token)
     }
 
-    pub fn verify_from_req(&self, req: &HttpRequest) -> Result<TokenInfo, Error> {
+    pub fn verify_from_req<T: DeserializeOwned>(&self, req: &HttpRequest) -> Result<T, Error> {
         let auth = req.headers().get("Authorization");
         match auth {
             None => Err(error::ErrorUnauthorized("Unauthorized")),
@@ -26,8 +32,8 @@ impl TokenTool {
         }
     }
 
-    pub fn verify_from_str(&self, token: &str) -> Result<TokenInfo, Error> {
-        let t: TokenInfo = token
+    pub fn verify_from_str<T: DeserializeOwned>(&self, token: &str) -> Result<T, Error> {
+        let t: T = token
             .verify_with_key(&self.hmac)
             .map_err(|e| error::ErrorInternalServerError(e))?;
         Ok(t)

@@ -28,7 +28,7 @@ pub async fn start() -> std::io::Result<()> {
             .configure(app::config)
             .service(Files::new("/", config.static_dir()).show_files_listing())
             .default_service(
-                web::route()
+                web::route() // TODO: get 404->index
                     .guard(guard::Not(guard::Get()))
                     .to(|| HttpResponse::NotFound().body("404 Not Found!")),
             )
