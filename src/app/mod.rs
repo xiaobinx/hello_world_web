@@ -1,6 +1,5 @@
 use actix_files::NamedFile;
 use actix_web::{
-    get,
     web::{self, Data},
     Result,
 };
@@ -24,12 +23,9 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     json::config(cfg);
     test::config(cfg);
     stream::config(cfg);
-
-    cfg.service(index);
 }
 
-#[get("/")]
-pub async fn index(config: Data<Config>) -> Result<NamedFile> {
+pub async fn spa_index(config: Data<Config>) -> Result<NamedFile> {
     Ok(NamedFile::open(format!(
         "{}/index.html",
         config.static_dir()
