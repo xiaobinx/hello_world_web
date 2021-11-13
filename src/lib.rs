@@ -20,11 +20,11 @@ pub async fn start() -> std::io::Result<()> {
     let token_tool = Data::new(TokenTool::new(config.key()));
     HttpServer::new(move || {
         App::new()
-            .wrap(Logger::default())
-            .wrap(Compress::default())
             .app_data(config.clone())
             .app_data(token_tool.clone())
             .app_data(app_state.clone())
+            .wrap(Logger::default())
+            .wrap(Compress::default())
             .configure(app::config)
             .service(Files::new("/", config.static_dir()).show_files_listing())
             .default_service(

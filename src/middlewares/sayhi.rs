@@ -1,7 +1,6 @@
 use actix_web::{
-    dev::{Service, ServiceRequest, ServiceResponse, Transform},
-    web::Data,
-    Error,
+    dev::{Extensions, Service, ServiceRequest, ServiceResponse, Transform},
+    Error, HttpMessage,
 };
 use futures::{
     future::{ok, Ready},
@@ -9,8 +8,6 @@ use futures::{
 };
 use std::pin::Pin;
 use std::task::{Context, Poll};
-
-use crate::tool::app_state::AppState;
 
 pub struct SayHi;
 
@@ -52,32 +49,16 @@ where
     }
 
     fn call(&mut self, req: Self::Request) -> Self::Future {
-        println!("Hi from start. You requested: {}", req.path());
-        // {
-        //     if labels.is_empty() {
-        //         labels.push("shit 1".to_string());
-        //     }
-        //     println!("{:?}", data.labels);
-        // }
-        let data: &Data<AppState> = req.app_data().unwrap();
-        let data = data.clone();
-        let method = req.method().to_string();
-        let path = req.path().to_string();
+        let mut ex = Extensions::new();
+        ex.insert(String::from("AAA"));
+        req.extensions_mut().extend(ex);
         let fut = self.service.call(req);
         Box::pin(async move {
-            println!("{} {}.-----------------", method, path);
-            {
-                let mut labels = data.labels.lock().await;
-                if labels.is_empty() {
-                    labels.push("shit 1".to_string());
-                }
-            }
-
             let res = fut.await?;
-            let headers = res.headers();
-            for (name, value) in headers.iter() {
-                println!("{}: {}", name.to_string(), value.to_str().unwrap());
-            }
+            // let headers = res.headers();
+            // for (name, value) in headers.iter() {
+            //     println!("{}: {}", name.to_string(), value.to_str().unwrap());
+            // }
             Ok(res)
         })
     }

@@ -5,13 +5,24 @@ use actix_web::{
 };
 use serde::Deserialize;
 
+use crate::middlewares::sayhi::SayHi;
+
 pub fn config(cfg: &mut ServiceConfig) {
     cfg.service(
         web::scope("/extractoers")
             .service(extractors_path)
             .service(extractors_query)
-            .service(extractors_json),
+            .service(extractors_json)
+            .service(say_hi_midll)
+            .wrap(SayHi),
     );
+}
+
+#[get("/say_hi_midll")]
+async fn say_hi_midll(req: HttpRequest) -> String {
+    let ex = req.extensions();
+    let s: &String = ex.get().unwrap();
+    format!("say_hi_midll, {}", s)
 }
 
 #[get("/path/{p1}/{p2}")]
