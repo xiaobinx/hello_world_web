@@ -3,6 +3,7 @@ use std::fs;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Config {
+    listen: String,
     port: i32,
     key: String,
     static_dir: Option<String>,
@@ -14,6 +15,10 @@ impl Config {
         let content = fs::read_to_string(path).unwrap();
         let config: Config = serde_json::from_str(&content).unwrap();
         config
+    }
+
+    pub fn listen(&self) -> &str {
+        self.listen.as_str()
     }
 
     pub fn port(&self) -> i32 {
